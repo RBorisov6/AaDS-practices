@@ -1,0 +1,6 @@
+*.swp
+*.exe
+*.o
+*.d
+*.out
+vector-tests
