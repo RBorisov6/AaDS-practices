@@ -32,7 +32,7 @@ topit::Vector<T>::~Vector()
 }
 
 template <class T>
-topit::Vector<T>::isEmpty() const noexcept
+bool topit::Vector<T>::isEmpty() const noexcept
 {
     return false;
 }
