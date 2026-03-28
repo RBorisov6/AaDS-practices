@@ -1,4 +1,3 @@
-
 #ifndef VECTOR_TOP_IT_HPP
 #define VECTOR_TOP_IT_HPP
 #include <cstddef>
@@ -16,11 +15,17 @@ namespace topit
 
     bool isEmpty() const noexcept;
     size_t getSize() const noexcept;
+    size_t getCapacity() const noexcept;
+
+    void pushBack(const T& val);
 
     T& operator[](size_t id) noexcept;
     const T& operator[](size_t id) const noexcept;
     T& at(size_t id);
     const T& at(size_t id) const;
+
+    bool operator==(const Vector< T >& rhs) const noexcept;
+    bool operator!=(const Vector< T >& rhs) const noexcept;
 
   private:
     T* data_;
@@ -28,6 +33,31 @@ namespace topit
 
     explicit Vector(size_t size);
   };
+}
+
+template < class T >
+bool topit::Vector< T >::operator==(const Vector< T >& rhs) const noexcept
+{
+  if (size_ != rhs.getSize())
+  {
+    return false;
+  }
+
+  for (size_t i = 0; i < size_; ++i)
+  {
+    if (data_[i] != rhs.data_[i])
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+template < class T >
+bool topit::Vector< T >::operator!=(const Vector< T >& rhs) const noexcept
+{
+  return !(*this == rhs);
 }
 
 template< class T >
@@ -73,9 +103,33 @@ size_t topit::Vector< T >::getSize() const noexcept
 }
 
 template< class T >
+size_t topit::Vector< T >::getCapacity() const noexcept
+{
+  return capacity_;
+}
+
+template< class T>
+void topit::Vector< T >::pushBack(const T& val)
+{
+  if (size_ == capacity_)
+  {
+    T* newData = new T[size_ * 2];
+    for (size_t i = 0; i < size_; ++i)
+    {
+      newData[i] = data_[i];
+    }
+    T* tmp = data_;
+    data_ = newData;
+    delete[] tmp;
+    capacity_ *= 2;
+  }
+  data_[size_++] = val;
+}
+
+template< class T >
 T& topit::Vector< T >::operator[](size_t id) noexcept
 {
-
+  return data_[id];
 }
 
 template< class T >
@@ -87,7 +141,7 @@ T& topit::Vector< T >::at(size_t id)
 template< class T >
 const T& topit::Vector< T >::operator[](size_t id) const noexcept
 {
-
+  return data_[id];
 }
 
 template< class T >

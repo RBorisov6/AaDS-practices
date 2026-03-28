@@ -90,6 +90,67 @@ bool test7()
   }
 }
 
+bool test8()
+{
+  Vector< int > a(3,1);
+  Vector< int > b(3,1);
+  return a == b;
+}
+
+bool test9()
+{
+  Vector< int > a(3,1);
+  Vector< int > b(3,2);
+  return a != b;
+}
+
+bool test10()
+{
+  Vector< int > v;
+  return v.getCapacity() == 0;
+}
+
+bool test11()
+{
+  size_t size = 3ull;
+  Vector< int > v(size, 0);
+  return v.getCapacity() == size;
+}
+
+bool test12()
+{
+  constexpr size_t size = 3ull;
+  Vector< int > v(size, 1);
+  const int& value = v[0];
+  return value == 1;
+}
+
+
+bool test13()
+{
+  constexpr size_t size = 3ull;
+  const Vector< int > v(size, 1);
+  const int& value = v[0];
+  return value == 1;
+}
+
+bool test14()
+{
+  constexpr size_t size = 3ull;
+  Vector< int > v(size, 1);
+  v.pushBack(2);
+  return v[size] == 2;
+}
+
+bool test15()
+{
+  constexpr size_t size = 3ull;
+  Vector< int > v(size, 1);
+  v.pushBack(2);
+  v.pushBack(3);
+  return v[size+1] == 3;
+}
+
 int main()
 {
   using test_t = bool(*)();
@@ -101,7 +162,15 @@ int main()
     {test4, "In range access does not generate exceptions"},
     {test5, "Out of range access generates std::out_of_range exception"},
     {test6, "In range access for const vector does not generate exceptions"},
-    {test7, "Out of range access for const vector generates std::out_of_range exception"}
+    {test7, "Out of range access for const vector generates std::out_of_range exception"},
+    {test8, "Operator =="},
+    {test9, "Operator !="},
+    {test10, "Defaul constructed vector capacity is zero"},
+    {test11, "Vector constucted with capacity ihas non-zero capacity"},
+    {test12, "Operator [] for range access in vector"},
+    {test13, "Operator [] for range access in const vector"},
+    {test14, "pushBack method with extention of capacity"},
+    {test15, "pushBack method without extention of capacity"}
   };
 
   size_t size = sizeof(tests) / sizeof(case_t);
