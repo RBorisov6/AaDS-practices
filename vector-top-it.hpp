@@ -1,3 +1,4 @@
+
 #ifndef VECTOR_TOP_IT_HPP
 #define VECTOR_TOP_IT_HPP
 #include <cstddef>
@@ -10,9 +11,12 @@ namespace topit
     Vector(size_t size, const T& val);
     ~Vector();
 
-    Vector(const Vector< T >&) = delete;
-    Vector< T >& operator=(const Vector< T >&) = delete;
+    Vector(const Vector< T >&);
+    Vector< T >& operator=(const Vector< T >&);
+    Vector(Vector < T >&&) noexcept;
+    Vector< T >& operator=(Vector< T >&&) noexcept;
 
+    void swap(Vector< T >&) noexcept;
     bool isEmpty() const noexcept;
     size_t getSize() const noexcept;
     size_t getCapacity() const noexcept;
@@ -91,6 +95,33 @@ topit::Vector< T >::~Vector()
 }
 
 template< class T >
+topit::Vector< T >::Vector(const Vector< T >& rhs):
+  Vector(rhs.getSize())
+{
+  for (size_t i = 0; i < getSize(); ++i)
+  {
+    data_[i] = rhs.data_[i];
+  }
+}
+
+template< class T >
+topit::Vector< T >& topit::Vector< T >::operator=(const Vector< T >& rhs)
+{
+  Vector< T > cpy(rhs);
+  swap(cpy);
+
+  return *this;
+}
+
+template< class T >
+void topit::Vector< T >::swap(Vector< T >& rhs) noexcept
+{
+  std::swap(data_, rhs.data_);
+  std::swap(size_, rhs.size_);
+  std::swap(capacity_, rhs.capacity_);
+}
+
+template< class T >
 bool topit::Vector< T >::isEmpty() const noexcept
 {
   return !size_;
@@ -155,3 +186,4 @@ const T& topit::Vector< T >::at(size_t id) const
 }
 
 #endif
+
