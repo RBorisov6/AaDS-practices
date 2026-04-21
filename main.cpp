@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "vector-top-it.hpp"
 
@@ -200,182 +199,182 @@ bool test20()
 
 bool test21()
 {
-    Vector<int> v(3, 1);
-    v.insert(1, 5);
+  Vector< int > v(3, 1);
+  v.insert(1, 5);
 
-    return v.getSize() == 4 && v[0] == 1 && v[1] == 5 && v[2] == 1 && v[3] == 1;
+  return v.getSize() == 4 && v[0] == 1 && v[1] == 5 && v[2] == 1 && v[3] == 1;
 }
 
 bool test22()
 {
-    Vector<int> v(3, 1);
-    try
-    {
-        v.insert(5, 99);
-        return false;
-    }
-    catch (const std::out_of_range&)
-    {
-        return true;
-    }
-    catch (...)
-    {
-        return false;
-    }
+  Vector< int > v(3, 1);
+  try
+  {
+    v.insert(5, 99);
+    return false;
+  }
+  catch (const std::out_of_range&)
+  {
+    return true;
+  }
+  catch (...)
+  {
+    return false;
+  }
 }
 
 bool test23()
 {
-    Vector<int> v(2, 1);
-    Vector<int> toInsert(3, 5);
-    v.insert(1, toInsert, 0, 3);
+  Vector< int > v(2, 1);
+  Vector< int > toInsert(3, 5);
+  v.insert(1, toInsert, 0, 3);
 
-    bool result = v.getSize() == 5;
-    result = result && v[0] == 1;
-    result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
-    result = result && v[4] == 1;
-    return result;
+  bool result = v.getSize() == 5;
+  result = result && v[0] == 1;
+  result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
+  result = result && v[4] == 1;
+  return result;
 }
 
 bool test24()
 {
-    Vector<int> v(2, 1);
-    Vector<int> toInsert(3, 5);
+  Vector< int > v(2, 1);
+  Vector< int > toInsert(3, 5);
 
-    try
-    {
-        v.insert(1, toInsert, 5, 3);
-        return false;
-    }
-    catch (const std::out_of_range&)
-    {
-        return true;
-    }
-    catch (...)
-    {
-        return false;
-    }
+  try
+  {
+    v.insert(1, toInsert, 5, 3);
+    return false;
+  }
+  catch (const std::out_of_range&)
+  {
+    return true;
+  }
+  catch (...)
+  {
+    return false;
+  }
 }
 
 bool test25()
 {
-    Vector<int> v(5, 0);
-    v[1] = 1;
-    v[2] = 2;
-    v[3] = 3;
-    v.erase(2);
+  Vector< int > v(5, 0);
+  v[1] = 1;
+  v[2] = 2;
+  v[3] = 3;
+  v.erase(2);
 
-    bool result = v.getSize() == 4;
-    result = result && v[0] == 0 && v[1] == 1;
-    result = result && v[2] == 3 && v[3] == 0;
-    return result;
+  bool result = v.getSize() == 4;
+  result = result && v[0] == 0 && v[1] == 1;
+  result = result && v[2] == 3 && v[3] == 0;
+  return result;
 }
 
 bool test26()
 {
-    Vector<int> v(3, 1);
-    try
-    {
-        v.erase(3);
-        return false;
-    }
-    catch (const std::out_of_range&)
-    {
-        return true;
-    }
-    catch (...)
-    {
-        return false;
-    }
+  Vector< int > v(3, 1);
+  try
+  {
+    v.erase(3);
+    return false;
+  }
+  catch (const std::out_of_range&)
+  {
+    return true;
+  }
+  catch (...)
+  {
+    return false;
+  }
 }
 
 bool test27()
 {
-    Vector<int> v(3, 1);
-    v.insert(v.begin() + 1, 5);
+  Vector< int > v(3, 1);
+  v.insert(v.begin() + 1, 5);
 
-    return v.getSize() == 4 && v[0] == 1 && v[1] == 5 && v[2] == 1 && v[3] == 1;
+  return v.getSize() == 4 && v[0] == 1 && v[1] == 5 && v[2] == 1 && v[3] == 1;
 }
 
 bool test28()
 {
-    Vector<int> v(3, 1);
-    v.insert(v.begin(), 5);
+  Vector< int > v(3, 1);
+  v.insert(v.begin(), 5);
 
-    return v.getSize() == 4 && v[0] == 5 && v[1] == 1 && v[2] == 1 && v[3] == 1;
+  return v.getSize() == 4 && v[0] == 5 && v[1] == 1 && v[2] == 1 && v[3] == 1;
 }
 
 bool test29()
 {
-    Vector<int> v(2, 1);
-    v.insert(v.begin() + 1, 3, 5);
+  Vector< int > v(2, 1);
+  v.insert(v.begin() + 1, 3, 5);
 
-    bool result = v.getSize() == 5;
-    result = result && v[0] == 1;
-    result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
-    result = result && v[4] == 1;
-    return result;
+  bool result = v.getSize() == 5;
+  result = result && v[0] == 1;
+  result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
+  result = result && v[4] == 1;
+  return result;
 }
 
 bool test30()
 {
-    Vector<int> v(2, 1);
-    Vector<int> toInsert(3, 5);
-    v.insert(v.begin() + 1, toInsert.begin(), toInsert.end());
+  Vector< int > v(2, 1);
+  Vector< int > toInsert(3, 5);
+  v.insert(v.begin() + 1, toInsert.begin(), toInsert.end());
 
-    bool result = v.getSize() == 5;
-    result = result && v[0] == 1;
-    result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
-    result = result && v[4] == 1;
-    return result;
+  bool result = v.getSize() == 5;
+  result = result && v[0] == 1;
+  result = result && v[1] == 5 && v[2] == 5 && v[3] == 5;
+  result = result && v[4] == 1;
+  return result;
 }
 
 bool test31()
 {
-    Vector<int> v(5, 0);
-    v[1] = 1;
-    v[2] = 2;
-    v[3] = 3;
-    v.erase(v.begin() + 2);
+  Vector< int > v(5, 0);
+  v[1] = 1;
+  v[2] = 2;
+  v[3] = 3;
+  v.erase(v.begin() + 2);
 
-    bool result = v.getSize() == 4;
-    result = result && v[0] == 0 && v[1] == 1;
-    result = result && v[2] == 3 && v[3] == 0;
-    return result;
+  bool result = v.getSize() == 4;
+  result = result && v[0] == 0 && v[1] == 1;
+  result = result && v[2] == 3 && v[3] == 0;
+  return result;
 }
 
 bool test32()
 {
-    Vector<int> v(5, 0);
-    v[1] = 1;
-    v[2] = 2;
-    v[3] = 3;
-    v[4] = 4;
-    v.erase(v.begin() + 1, v.begin() + 4);
+  Vector< int > v(5, 0);
+  v[1] = 1;
+  v[2] = 2;
+  v[3] = 3;
+  v[4] = 4;
+  v.erase(v.begin() + 1, v.begin() + 4);
 
-    bool result = v.getSize() == 2;
-    result = result && v[0] == 0 && v[1] == 4;
-    return result;
+  bool result = v.getSize() == 2;
+  result = result && v[0] == 0 && v[1] == 4;
+  return result;
 }
 
 bool test33()
 {
-    Vector<int> v(7, 0);
-    v[0] = 1;
-    v[1] = 2;
-    v[2] = 3;
-    v[3] = 2;
-    v[4] = 4;
-    v[5] = 2;
-    v[6] = 5;
-    v.erase(v.begin() + 1, v.begin() + 6, 2);
+  Vector< int > v(7, 0);
+  v[0] = 1;
+  v[1] = 2;
+  v[2] = 3;
+  v[3] = 2;
+  v[4] = 4;
+  v[5] = 2;
+  v[6] = 5;
+  v.erase(v.begin() + 1, v.begin() + 6, 2);
 
-    bool result = v.getSize() == 4;
-    result = result && v[0] == 1;
-    result = result && v[1] == 3;
-    result = result && v[2] == 4;
-    result = result && v[3] == 5;
-    return result;
+  bool result = v.getSize() == 4;
+  result = result && v[0] == 1;
+  result = result && v[1] == 3;
+  result = result && v[2] == 4;
+  result = result && v[3] == 5;
+  return result;
 }
 
 bool test34()
@@ -388,6 +387,91 @@ bool test35()
 {
   Vector< int > v{};
   return v.isEmpty();
+}
+
+bool test36()
+{
+    Vector< int > v(5, 1);
+    v.reserve(20);
+
+    bool result = v.getCapacity() >= 20;
+    result = result && v.getSize() == 5;
+    for (size_t i = 0; i < 5; ++i)
+    {
+        result = result && v[i] == 1;
+    }
+    return result;
+}
+
+bool test37()
+{
+  Vector< int > v(3, 1);
+  v.pushBack(2);
+  v.pushBack(3);
+  v.shrinkToFit();
+
+  return v.getCapacity() == v.getSize() && v.getSize() == 5 && v[0] == 1 && v[1] == 1 && v[2] == 1 && v[3] == 2 && v[4] == 3;
+}
+
+bool test38()
+{
+  Vector< int > v;
+  v.repeatPushBack(5, 3);
+
+  return v.getSize() == 3 && v[0] == 5 && v[1] == 5 && v[2] == 5;
+}
+
+bool test39()
+{
+  Vector< int > v{1, 2, 3};
+  v.repeatInsert(0, 99, 2);
+
+  bool result = v.getSize() == 5;
+  result = result && v[0] == 99 && v[1] == 99;
+  result = result && v[2] == 1 && v[3] == 2 && v[4] == 3;
+  return result;
+}
+
+bool test40()
+{
+  Vector< int > v{1, 2, 3};
+
+  try
+  {
+    v.repeatInsert(5, 99, 2);
+    return false;
+  }
+  catch (const std::out_of_range&)
+  {
+    return true;
+  }
+  catch (...)
+  {
+    return false;
+  }
+}
+
+bool test41()
+{
+  Vector< int > v{10, 20, 30};
+  int arr[] = {1, 2, 3};
+  v.rangedPushBack(arr, 3);
+
+  bool result = v.getSize() == 6;
+  result = result && v[0] == 10 && v[1] == 20 && v[2] == 30;
+  result = result && v[3] == 1 && v[4] == 2 && v[5] == 3;
+  return result;
+}
+
+bool test42()
+{
+  Vector< int > v;
+  Vector< int > source{10, 20, 30, 40};
+  v.rangedPushBack(source.begin(), 4);
+
+  bool result = v.getSize() == 4;
+  result = result && v[0] == 10 && v[1] == 20 && v[2] == 30 && v[3] == 40;
+  return result;
 }
 
 int main()
@@ -415,21 +499,28 @@ int main()
     { test18, "Swap for 2 vectors" },
     { test19, "Move constructor" },
     { test20, "Move assignment operator" },
-    { test21, "insert by index (middle)" },
-    { test22, "insert by index (out of range throws)" },
-    { test23, "insert range from vector (middle)" },
-    { test24, "insert range (invalid source range throws)" },
-    { test25, "erase by index (middle)" },
-    { test26, "erase by index (out of range throws)" },
-    { test27, "insert by iterator (middle)" },
-    { test28, "insert by iterator (begin)" },
-    { test29, "insert count copies by iterator" },
-    { test30, "insert range by iterators" },
-    { test31, "erase by iterator (middle)" },
-    { test32, "erase range by iterators" },
-    { test33, "erase values by iterators" },
+    { test21, "Insert by index (middle)" },
+    { test22, "Insert by index (out of range throws)" },
+    { test23, "Insert range from vector (middle)" },
+    { test24, "Insert range (invalid source range throws)" },
+    { test25, "Erase by index (middle)" },
+    { test26, "Erase by index (out of range throws)" },
+    { test27, "Insert by iterator (middle)" },
+    { test28, "Insert by iterator (begin)" },
+    { test29, "Insert count copies by iterator" },
+    { test30, "Insert range by iterators" },
+    { test31, "Erase by iterator (middle)" },
+    { test32, "Erase range by iterators" },
+    { test33, "Erase values by iterators" },
     { test34, "Non-empty initializer list constructor"},
-    { test35, "Empty initializer list constructor"}
+    { test35, "Empty initializer list constructor"},
+    { test36, "Reserve on non-empty vector increases capacity and preserves data" },
+    { test37, "ShrinkToFit after multiple pushBacks" },
+    { test38, "RepeatPushBack with k > 0 on empty vector" },
+    { test39, "RepeatInsert at beginning" },
+    { test40, "RepeatInsert out of range throws" },
+    { test41, "RangedPushBack to non-empty vector" },
+    { test42, "RangedPushBack with Vector iterators" }
   };
 
   size_t size = sizeof(tests) / sizeof(case_t);
@@ -450,4 +541,3 @@ int main()
   std::cout << fails << ": failed tests\n";
   std::cout << succceses << ": successed tests\n";
 }
-

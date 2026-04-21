@@ -1,6 +1,6 @@
-
 #ifndef VECTOR_TOP_IT_HPP
 #define VECTOR_TOP_IT_HPP
+
 #include <cstddef>
 #include <stdexcept>
 #include <initializer_list>
@@ -25,17 +25,16 @@ namespace topit
     size_t getSize() const noexcept;
     size_t getCapacity() const noexcept;
 
-    //H/w + tests
-    void reserve(size_t k); // У меня уже есть метод reallocate, по смыслу такой же
+    void reserve(size_t k);
     void shrinkToFit();
     void repeatPushBack(const T& val, size_t k);
+    void repeatInsert(size_t id, const T& val, size_t k);
+
     template< class IT >
     void rangedPushBack(IT beg, size_t count);
 
     void pushBack(const T& val);
     void pushFront(const T& val);
-
-    //H/w избавиться от требования к конструктору по умолчанию
 
     void insert(size_t pos, const T& val);
     void insert(size_t pos, const Vector< T >& rhs, size_t b, size_t e);
@@ -70,7 +69,8 @@ namespace topit
 
   private:
     T* data_;
-    size_t size_, capacity_;
+    size_t size_;
+    size_t capacity_;
 
     explicit Vector(size_t size);
 
@@ -444,7 +444,7 @@ namespace topit
     int last_index = last - begin();
     size_t count = static_cast< size_t >(last_index - first_index);
 
-    Vector<T> result(size_ - count);
+    Vector< T > result(size_ - count);
 
     for (int i = 0; i < first_index; ++i)
     {
@@ -477,7 +477,7 @@ namespace topit
     int first_index = first - begin();
     int last_index = last - begin();
 
-    Vector<T> result;
+    Vector< T > result;
 
     for (int i = 0; i < first_index; ++i)
     {
@@ -510,12 +510,13 @@ namespace topit
   template< class T >
   void Vector< T >::reallocate(size_t new_capacity)
   {
-    T* new_data = new T[new_capacity];
+    T* new_data = static_cast< T* >(::operator new(new_capacity * sizeof(T)));
     for (size_t i = 0; i < size_; ++i)
     {
-      new_data[i] = data_[i];
+      new (new_data + i) T(std::move(data_[i]));
+      data_[i].~T();
     }
-    delete[] data_;
+    ::operator delete(data_);
     data_ = new_data;
     capacity_ = new_capacity;
   }
@@ -554,7 +555,7 @@ namespace topit
 
   template< class T >
   Vector< T >::Vector(size_t size):
-    data_(size ? new T[size] : nullptr),
+    data_(size ? static_cast< T* >(::operator new(size * sizeof(T))) : nullptr),
     size_(size),
     capacity_(size)
   {}
@@ -565,14 +566,18 @@ namespace topit
   {
     for (size_t i = 0; i < size; ++i)
     {
-      data_[i] = val;
+      new (data_ + i) T(val);
     }
   }
 
   template< class T >
   Vector< T >::~Vector()
   {
-    delete[] data_;
+    for (size_t i = 0; i < size_; ++i)
+    {
+      data_[i].~T();
+    }
+    ::operator delete(data_);
   }
 
   template< class T >
@@ -581,7 +586,7 @@ namespace topit
   {
     for (size_t i = 0; i < getSize(); ++i)
     {
-      data_[i] = rhs.data_[i];
+      new (data_ + i) T(rhs.data_[i]);
     }
   }
 
@@ -615,7 +620,11 @@ namespace topit
   {
     if (this != &rhs)
     {
-      delete[] data_;
+      for (size_t i = 0; i < size_; ++i)
+      {
+        data_[i].~T();
+      }
+      ::operator delete(data_);
       data_ = rhs.data_;
       size_ = rhs.size_;
       capacity_ = rhs.capacity_;
@@ -633,7 +642,7 @@ namespace topit
     size_t i = 0;
     for (auto it = il.begin(); it != il.end(); ++it)
     {
-      data_[i++] = *it;
+      new (data_ + i++) T(*it);
     }
   }
 
@@ -674,32 +683,129 @@ namespace topit
   template< class T>
   void Vector< T >::reserve(size_t k)
   {
-    Vector< T > v(k);
-    for (size_t i = 0; i < getSize(); ++i)
+    if (k <= capacity_)
     {
-      v[i] = (*this)[i];
+      return;
     }
-    swap(v);
+
+    T* new_data = static_cast< T* >(::operator new(k * sizeof(T)));
+
+    for (size_t i = 0; i < size_; ++i)
+    {
+      new (new_data + i) T(std::move(data_[i]));
+      data_[i].~T();
+    }
+
+    ::operator delete(data_);
+
+    data_ = new_data;
+    capacity_ = k;
   }
 
   template< class T>
   void Vector< T >::shrinkToFit()
   {
+    if (size_ == capacity_)
+    {
+      return;
+    }
 
+    if (size_ == 0)
+    {
+      for (size_t i = 0; i < size_; ++i)
+      {
+        data_[i].~T();
+      }
+      ::operator delete(data_);
+      data_ = nullptr;
+      capacity_ = 0;
+      return;
+    }
+
+    T* new_data = static_cast< T* >(::operator new(size_ * sizeof(T)));
+    for (size_t i = 0; i < size_; ++i)
+    {
+      new (new_data + i) T(std::move(data_[i]));
+      data_[i].~T();
+    }
+    ::operator delete(data_);
+    data_ = new_data;
+    capacity_ = size_;
+  }
+
+  template< class T >
+  void Vector< T >::repeatInsert(size_t id, const T& val, size_t k)
+  {
+    if (id > size_)
+    {
+      throw std::out_of_range("insert position out of range");
+    }
+
+    if (k == 0)
+    {
+      return;
+    }
+
+    Vector< T > result(size_ + k);
+
+    for (size_t i = 0; i < id; ++i)
+    {
+      result[i] = data_[i];
+    }
+
+    for (size_t i = 0; i < k; ++i)
+    {
+      result[id + i] = val;
+    }
+
+    for (size_t i = id; i < size_; ++i)
+    {
+      result[i + k] = data_[i];
+    }
+
+    swap(result);
   }
 
   template< class T >
   void Vector< T >::repeatPushBack(const T& val, size_t k)
   {
+    if (k == 0)
+    {
+      return;
+    }
 
+    if (size_ + k > capacity_)
+    {
+      reallocate(size_ + k);
+    }
+
+    for (size_t i = 0; i < k; ++i)
+    {
+      data_[size_ + i] = val;
+    }
+    size_ += k;
   }
 
   template< class T >
   template< class IT >
   void Vector< T >::rangedPushBack(IT beg, size_t count)
   {
-    // зарезервировать место под count + getSize()
-    // Вставлять элементы от beg до end
+    if (count == 0)
+    {
+      return;
+    }
+
+    if (size_ + count > capacity_)
+    {
+      reallocate(size_ + count);
+    }
+
+    for (size_t i = 0; i < count; ++i)
+    {
+      data_[size_ + i] = *beg;
+      ++beg;
+    }
+    size_ += count;
   }
 
   template< class T >
@@ -733,7 +839,7 @@ namespace topit
       throw std::out_of_range("insert position out of range");
     }
 
-    Vector<T> result(size_ + 1);
+    Vector< T > result(size_ + 1);
 
     for (size_t i = 0; i < pos; ++i)
     {
@@ -764,7 +870,7 @@ namespace topit
 
     size_t count = e - b;
 
-    Vector<T> result(size_ + count);
+    Vector< T > result(size_ + count);
 
     for (size_t i = 0; i < pos; ++i)
     {
@@ -794,12 +900,12 @@ namespace topit
 
     if (size_ == 1)
     {
-      Vector<T> result;
+      Vector< T > result;
       swap(result);
       return;
     }
 
-    Vector<T> result(size_ - 1);
+    Vector< T > result(size_ - 1);
 
     for (size_t i = 0; i < pos; ++i)
     {
@@ -845,8 +951,6 @@ namespace topit
     }
     return data_[id];
   }
-
 }
 
 #endif
-
